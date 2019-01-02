@@ -2,7 +2,7 @@
 import abc
 
 
-class BaseActor(object):
+class BaseActor:
     """Mixin for actors.
 
     All agents must inherit.
@@ -16,7 +16,7 @@ class BaseActor(object):
         return
 
 
-class BaseExplorer(object):
+class BaseExplorer:
     """Mixin for actors who can explore.
 
     Optional.
@@ -33,7 +33,7 @@ class BaseExplorer(object):
         return
 
 
-class BaseLearner(object):
+class BaseLearner:
     """Mixin for learners.
 
     Not strictly necessary, but advisable.

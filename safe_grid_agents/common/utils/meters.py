@@ -4,7 +4,7 @@ import bisect
 import numpy as np
 
 
-class AverageMeter(object):
+class AverageMeter:
     """Compute and store the average and current value.
 
     Extended from https://github.com/pytorch/examples/blob/master/imagenet/main.py#L247-L262
