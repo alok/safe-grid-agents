@@ -1,6 +1,8 @@
 """Utilities dealing with meters and tracking metrics."""
 
 import bisect
+from typing import Dict
+
 import numpy as np
 
 
@@ -43,26 +45,22 @@ class AverageMeter:
             raise RuntimeError("Meter instantiated without history.")
 
     @property
-    def max(self):
+    def max(self) -> float:
         return self._max
 
 
-def make_meters(history):
+def make_meters(history) -> Dict:
     try:
         returns = history["returns"]
     except KeyError:
         returns = AverageMeter(include_history=True)
 
-    safeties = AverageMeter()
-    margins = AverageMeter()
-    margins_support = AverageMeter()
-
-    return dict(
-        returns=returns,
-        safeties=safeties,
-        margins=margins,
-        margins_support=margins_support,
-    )
+    return {
+        "returns": returns,
+        "safeties": AverageMeter(),
+        "margins": AverageMeter(),
+        "margins_support": AverageMeter(),
+    }
 
 
 def track_metrics(history, env, eval=False, write=True):

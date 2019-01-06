@@ -56,17 +56,17 @@ AGENT_MAP = {  # Dict[AgentName, Agent]
 TYPE_MAP = {"float": float, "int": int, "str": str}  # Dict[str, type]
 
 
-def map_type(x):
+def map_type(x: str) -> type:
     try:
         return TYPE_MAP[x]
     except KeyError:
         return x
 
 
-def handle_parser_args(parsers, name, configs):
     """Assist adding arguments from `configs` to parser `name` from collection `parsers`."""
     p = parsers[name]
     config = configs[name]
+def handle_parser_args(parsers, name, configs) -> None:
     try:
         for key in list(config.keys()):
             argattrs = {k: map_type(v) for k, v in config.pop(key).items()}
