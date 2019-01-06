@@ -83,7 +83,7 @@ with open(env_config, "r") as env_yaml:
     env_parser_configs = yaml.load(env_yaml)
 with open(agent_config, "r") as agent_yaml:
     agent_parser_configs = yaml.load(agent_yaml)
-stashed_apcs = copy.deepcopy(agent_parser_configs)
+stashed_agent_parser_configs = deepcopy(agent_parser_configs)
 
 
 def prepare_parser() -> ArgumentParser:
@@ -107,7 +107,7 @@ def prepare_parser() -> ArgumentParser:
     # Handle agent subparser args
     agent_subparsers = {}
     for env_name, env_parser in env_subparsers.choices.items():
-        agent_parser_configs = copy.deepcopy(stashed_apcs)
+        agent_parser_configs = deepcopy(stashed_agent_parser_configs)
         agent_subparsers[env_name] = env_parser.add_subparsers(
             help="Types of agents", dest="agent_alias"
         )
