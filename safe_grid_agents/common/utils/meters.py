@@ -34,7 +34,7 @@ class AverageMeter:
         self.count += n
         self.avg = self.sum / self.count
         if self._history is not None:
-            for x in range(n):
+            for _ in range(n):
                 bisect.insort(self._history, val)
 
     def quantile(self, delta):

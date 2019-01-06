@@ -1,30 +1,28 @@
 """Auto-constructs a CLI from relevant YAML config files."""
+
 from argparse import ArgumentParser
 from copy import deepcopy
 
+import yaml
+
 from ai_safety_gridworlds.environments.boat_race import BoatRaceEnvironment
-from ai_safety_gridworlds.environments.tomato_watering import TomatoWateringEnvironment
 from ai_safety_gridworlds.environments.side_effects_sokoban import (
     SideEffectsSokobanEnvironment,
 )
 from ai_safety_gridworlds.environments.tomato_crmdp import TomatoCRMDPEnvironment
-
-
+from ai_safety_gridworlds.environments.tomato_watering import TomatoWateringEnvironment
 from safe_grid_agents.common.agents import (
+    DeepQAgent,
+    PPOCNNAgent,
+    PPOCRMDPAgent,
+    PPOMLPAgent,
     RandomAgent,
     SingleActionAgent,
     TabularQAgent,
-    DeepQAgent,
-    PPOMLPAgent,
-    PPOCNNAgent,
-    PPOCRMDPAgent,
 )
+from safe_grid_agents.parsing import agent_config, core_config, env_config
 from safe_grid_agents.ssrl import TabularSSQAgent
-from safe_grid_agents.parsing import core_config, env_config, agent_config
-import yaml
-import copy
-from typing import Dict
-from safe_grid_agents.types import EnvAlias, EnvName, Agent, AgentName
+
 
 # Mapping of envs/agents to Python classes
 ENV_MAP = {  # Dict[EnvAlias, EnvName]
@@ -63,11 +61,15 @@ def map_type(x: str) -> type:
         return x
 
 
-    """Assist adding arguments from `configs` to parser `name` from collection `parsers`."""
-    p = parsers[name]
-    config = configs[name]
 def handle_parser_args(parsers, name, configs) -> None:
+    """Assist adding arguments from `configs` to parser `name` from collection
+    `parsers`."""
+    p, config = parsers[name], configs[name]
+
     try:
+        # `list` is necessary since we pop the original config keys and we
+        # can't use `deepcopy` as `dict.keys()` is a generator and is therefore
+        # unpickleable.
         for key in list(config.keys()):
             argattrs = {k: map_type(v) for k, v in config.pop(key).items()}
             alias = argattrs.pop("alias")
