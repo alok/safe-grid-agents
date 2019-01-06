@@ -1,6 +1,6 @@
 """Auto-constructs a CLI from relevant YAML config files."""
-import sys
 from argparse import ArgumentParser
+from copy import deepcopy
 
 from ai_safety_gridworlds.environments.boat_race import BoatRaceEnvironment
 from ai_safety_gridworlds.environments.tomato_watering import TomatoWateringEnvironment

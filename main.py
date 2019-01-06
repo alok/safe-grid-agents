@@ -1,13 +1,11 @@
 """Main safe-grid-agents script with CLI."""
+import os
 from safe_grid_agents.common import utils as ut
 from safe_grid_agents.common.eval import EVAL_MAP
 from safe_grid_agents.common.learn import LEARN_MAP
 from safe_grid_agents.common.warmup import WARMUP_MAP
 from safe_grid_agents.parsing import AGENT_MAP, ENV_MAP, prepare_parser
 from safe_grid_gym.envs import GridworldEnv
-
-import os
-import time
 from tensorboardX import SummaryWriter
 
 if __name__ == "__main__":

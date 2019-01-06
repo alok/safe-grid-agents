@@ -1,5 +1,4 @@
 """Agent-specific learning interactions."""
-import copy
 import functools
 
 from safe_grid_agents.common import utils as ut
