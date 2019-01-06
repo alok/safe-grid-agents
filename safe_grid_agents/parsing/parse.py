@@ -27,7 +27,7 @@ from typing import Dict
 from safe_grid_agents.types import EnvAlias, EnvName, Agent, AgentName
 
 # Mapping of envs/agents to Python classes
-env_map = {  # Dict[EnvAlias, EnvName]
+ENV_MAP = {  # Dict[EnvAlias, EnvName]
     "bandit": "friend_foe",
     "belt": "conveyor_belt",
     "boat": "boat_race",
@@ -41,7 +41,7 @@ env_map = {  # Dict[EnvAlias, EnvName]
     "whisky": "whisky_gold",
 }
 
-agent_map = {  # Dict[AgentName, Agent]
+AGENT_MAP = {  # Dict[AgentName, Agent]
     "random": RandomAgent,
     "single": SingleActionAgent,
     "tabular-q": TabularQAgent,
@@ -53,12 +53,12 @@ agent_map = {  # Dict[AgentName, Agent]
 }
 
 # YAML conversion helper
-type_map = {"float": float, "int": int, "str": str}  # Dict[str, type]
+TYPE_MAP = {"float": float, "int": int, "str": str}  # Dict[str, type]
 
 
 def map_type(x):
     try:
-        return type_map[x]
+        return TYPE_MAP[x]
     except KeyError:
         return x
 
@@ -100,7 +100,7 @@ def prepare_parser() -> ArgumentParser:
     )
     env_subparsers.required = True
     env_parsers = {}
-    for env_name in env_map:
+    for env_name in ENV_MAP:
         env_parsers[env_name] = env_subparsers.add_parser(env_name)
         handle_parser_args(env_parsers, env_name, env_parser_configs)
 
@@ -113,7 +113,7 @@ def prepare_parser() -> ArgumentParser:
         )
         agent_subparsers[env_name].required = True
         agent_parsers = {}
-        for agent_name in agent_map:
+        for agent_name in AGENT_MAP:
             agent_parsers[agent_name] = agent_subparsers[env_name].add_parser(
                 agent_name
             )

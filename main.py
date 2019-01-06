@@ -1,9 +1,9 @@
 """Main safe-grid-agents script with CLI."""
-from safe_grid_agents.parsing import prepare_parser, env_map, agent_map
-from safe_grid_agents.common.warmup import warmup_map
-from safe_grid_agents.common.learn import learn_map
-from safe_grid_agents.common.eval import eval_map
 from safe_grid_agents.common import utils as ut
+from safe_grid_agents.common.eval import EVAL_MAP
+from safe_grid_agents.common.learn import LEARN_MAP
+from safe_grid_agents.common.warmup import WARMUP_MAP
+from safe_grid_agents.parsing import AGENT_MAP, ENV_MAP, prepare_parser
 from safe_grid_gym.envs import GridworldEnv
 
 import os
@@ -19,6 +19,11 @@ if __name__ == "__main__":
     # Create logging directory
     # The try/except is there in case log_dir is None,
     # in which case we use the TensorboardX default
+    env_name = ENV_MAP[args.env_alias]
+    agent_class = AGENT_MAP[args.agent_alias]
+    warmup_fn = WARMUP_MAP[args.agent_alias]
+    learn_fn = LEARN_MAP[args.agent_alias]
+    eval_fn = EVAL_MAP[args.agent_alias]
     try:
         if not os.path.exists(args.log_dir):
             os.makedirs(args.log_dir, exist_ok=True)
@@ -26,11 +31,6 @@ if __name__ == "__main__":
         args.log_dir = None
 
     # Get relevant env, agent, warmup function
-    env_name = env_map[args.env_alias]
-    agent_class = agent_map[args.agent_alias]
-    warmup_fn = warmup_map[args.agent_alias]
-    learn_fn = learn_map[args.agent_alias]
-    eval_fn = eval_map[args.agent_alias]
 
     # Trackers
     history = ut.make_meters({})

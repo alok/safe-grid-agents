@@ -27,6 +27,6 @@ def noop_warmup(agent, env, history, args):
     return agent, env, history, args
 
 
-warmup_map = defaultdict(
+WARMUP_MAP = defaultdict(
     lambda: noop_warmup, {"tabular-ssq": ss.random_warmup, "deep-q": dqn_warmup}
 )
