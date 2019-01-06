@@ -1,5 +1,6 @@
 """Auto-constructs a CLI from relevant YAML config files."""
 import sys
+from argparse import ArgumentParser
 
 from ai_safety_gridworlds.environments.boat_race import BoatRaceEnvironment
 from ai_safety_gridworlds.environments.tomato_watering import TomatoWateringEnvironment
@@ -21,7 +22,6 @@ from safe_grid_agents.common.agents import (
 from safe_grid_agents.ssrl import TabularSSQAgent
 from safe_grid_agents.parsing import core_config, env_config, agent_config
 import yaml
-import argparse
 import copy
 from typing import Dict
 from safe_grid_agents.types import EnvAlias, EnvName, Agent, AgentName
@@ -86,10 +86,10 @@ with open(agent_config, "r") as agent_yaml:
 stashed_apcs = copy.deepcopy(agent_parser_configs)
 
 
-def prepare_parser():
+def prepare_parser() -> ArgumentParser:
     """Create all CLI parsers/subparsers."""
     # Handle core parser args
-    parser = argparse.ArgumentParser(
+    parser = ArgumentParser(
         description="Learning (Hopefully) Safe Agents in Gridworlds"
     )
     handle_parser_args({"core": parser}, "core", core_parser_configs)

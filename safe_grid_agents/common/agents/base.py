@@ -1,5 +1,5 @@
 """Base classes for agents."""
-import abc
+from abc import ABCMeta, abstractmethod
 
 
 class BaseActor:
@@ -8,9 +8,9 @@ class BaseActor:
     All agents must inherit.
     """
 
-    __metaclass__ = abc.ABCMeta
+    __metaclass__ = ABCMeta
 
-    @abc.abstractmethod
+    @abstractmethod
     def act(self, state, *args, **kwargs):
         """Choose an action from the current state and return the choice."""
         return
@@ -22,9 +22,9 @@ class BaseExplorer:
     Optional.
     """
 
-    __metaclass__ = abc.ABCMeta
+    __metaclass__ = ABCMeta
 
-    @abc.abstractmethod
+    @abstractmethod
     def act_explore(self, state, *args, **kwargs):
         """Choose an action from the current state and return the choice.
 
@@ -39,9 +39,9 @@ class BaseLearner:
     Not strictly necessary, but advisable.
     """
 
-    __metaclass__ = abc.ABCMeta
+    __metaclass__ = ABCMeta
 
-    @abc.abstractmethod
+    @abstractmethod
     def learn(self, *args, **kwargs):
         """Learn from an experience."""
         return
