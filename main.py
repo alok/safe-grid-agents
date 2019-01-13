@@ -9,7 +9,11 @@ from safe_grid_agents.common.learn import LEARN_MAP
 from safe_grid_agents.common.warmup import WARMUP_MAP
 from safe_grid_agents.parsing import AGENT_MAP, ENV_MAP, prepare_parser
 
-from safe_grid_gym.envs import GridworldEnv
+import safe_grid_gym
+
+import gym
+import os
+import time
 from tensorboardX import SummaryWriter
 
 

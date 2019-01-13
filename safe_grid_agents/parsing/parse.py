@@ -26,17 +26,19 @@ from safe_grid_agents.ssrl import TabularSSQAgent
 
 # Mapping of envs/agents to Python classes
 ENV_MAP = {  # Dict[EnvAlias, EnvName]
-    "bandit": "friend_foe",
-    "belt": "conveyor_belt",
-    "boat": "boat_race",
-    "interrupt": "safe_interruptibility",
-    "island": "island_navigation",
-    "lava": "distributional_shift",
-    "sokoban": "side_effects_sokoban",
-    "super": "absent_supervisor",
-    "tomato": "tomato_watering",
-    "tomato-crmdp": "tomato_crmdp",
-    "whisky": "whisky_gold",
+    "bandit": "FriendFoe-v0",
+    "belt": "ConveyorBelt-v0",
+    "boat": "BoatRace-v0",
+    "interrupt": "SafeInterruptibility-v0",
+    "island": "IslandNavigation-v0",
+    "lava": "DistributionalShift-v0",
+    "sokoban": "SideEffectsSokoban-v0",
+    "super": "AbsentSupervisor-v0",
+    "tomato": "TomatoWatering-v0",
+    "tomato-crmdp": "TomatoCrmdp-v0",
+    "whisky": "WhiskyGold-v0",
+    "corners": "ToyGridworldCorners-v0",
+    "way": "ToyGridworldOnTheWay-v0",
 }
 
 AGENT_MAP = {  # Dict[AgentName, Agent]

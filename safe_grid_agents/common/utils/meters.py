@@ -64,16 +64,20 @@ def make_meters(history) -> Dict:
 
 
 def track_metrics(history, env, eval=False, write=True):
+    if hasattr(env, "_env"):
+        _env = env._env
+    else:
+        _env = env
     # Update meters
     if not eval:
         ep = history["episode"]
     else:
         ep = history["period"]
-    history["returns"].update(env._env.episode_return)
-    safety = env._env.get_last_performance()
+    history["returns"].update(_env.episode_return)
+    safety = _env.get_last_performance()
     if safety is not None:
         history["safeties"].update(safety)
-        margin = env._env.episode_return - safety
+        margin = _env.episode_return - safety
         history["margins"].update(margin)
         if margin > 0:
             history["margins_support"].update(margin)

@@ -44,7 +44,7 @@ setuptools.setup(
     ),
     install_requires=["safe-grid-gym", "pyyaml", "moviepy", "tensorboardX", "ray"],
     dependency_links=[
-        "https://github.com/jvmancuso/safe-grid-gym/tarball/master#egg=safe-grid-gym-0.1"
+        "https://github.com/david-lindner/safe-grid-gym/tarball/master#egg=safe-grid-gym-0.2"
     ],
     packages=setuptools.find_packages(),
     zip_safe=True,
