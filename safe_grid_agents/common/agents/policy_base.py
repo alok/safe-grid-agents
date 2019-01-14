@@ -33,7 +33,8 @@ class PPOBaseAgent(nn.Module, BaseActor, BaseLearner, BaseExplorer):
         self.epochs = args.epochs
         self.clipping = args.clipping
         # self.gae = args.gae_coeff
-        # self.entropy = args.entropy_bonus
+        self.entropy_bonus = args.entropy_bonus
+        self.critic_coeff = args.critic_coeff
 
         # Network logistics
         self.build_ac()
@@ -44,10 +45,16 @@ class PPOBaseAgent(nn.Module, BaseActor, BaseLearner, BaseExplorer):
         self.old_policy.eval()
 
     def act(self, state) -> torch.Tensor:
+        state = torch.tensor(
+            state, requires_grad=False, dtype=torch.float32, device=self.device
+        )
         p, _ = self(state)
-        return p.argmax(-1)
+        return p.argmax(-1).item()
 
     def act_explore(self, state) -> torch.Tensor:
+        state = torch.tensor(
+            state, requires_grad=False, dtype=torch.float32, device=self.device
+        )
         policy = self.policy(state)
         return policy.sample().item()
 
@@ -64,15 +71,16 @@ class PPOBaseAgent(nn.Module, BaseActor, BaseLearner, BaseExplorer):
             rlsz = self.rollouts * states.size(1)
             ixs = torch.randint(rlsz, size=(self.batch_size,), dtype=torch.long)
             s = states.reshape(rlsz, states.shape[2], states.shape[3])[ixs]
-            a = actions.reshape(rlsz, -1)[ixs]
-            r = returns.reshape(rlsz, -1)[ixs]
+            a = actions.reshape(rlsz, -1)[ixs].reshape(-1)
+            r = returns.reshape(rlsz, -1)[ixs].reshape(-1)
 
             prepolicy, state_values = self(s)
             state_values = state_values.reshape(-1)
             policy_curr = Categorical(logits=prepolicy)
 
-            # Compute critic-adjusted returns
+            # Compute normalized, critic-adjusted returns
             adv = r - state_values
+            adv = (adv - adv.mean()) / adv.std()
 
             # Get log_probs for ratio -- Do not backprop through old policy!
             with torch.no_grad():
@@ -87,9 +95,8 @@ class PPOBaseAgent(nn.Module, BaseActor, BaseLearner, BaseExplorer):
             # Calculate loss
             vf_loss = nn.functional.mse_loss(state_values, r.squeeze())
             pi_loss = -torch.min(
-                (adv * ratio).mean(),
-                (adv * ratio.clamp(1 - self.clipping, 1 + self.clipping)).mean(),
-            )
+                (adv * ratio), (adv * ratio.clamp(1 - self.clipping, 1 + self.clipping))
+            ).mean()
             loss = pi_loss + self.critic_coeff * vf_loss - self.entropy_bonus * entropy
 
             # Logging
@@ -99,9 +106,7 @@ class PPOBaseAgent(nn.Module, BaseActor, BaseLearner, BaseExplorer):
             history["writer"].add_scalar(
                 "Train/value_loss", vf_loss.item(), history["t"]
             )
-            history["writer"].add_scalar(
-                "Train/policy_entropy", self.entropy_bonus * entropy, history["t"]
-            )
+            history["writer"].add_scalar("Train/policy_entropy", entropy, history["t"])
 
             # Backprop and step with optional gradient logging
             self.optim.zero_grad()
@@ -135,7 +140,7 @@ class PPOBaseAgent(nn.Module, BaseActor, BaseLearner, BaseExplorer):
                     reward = info["hidden_reward"]
                     # In case the agent is drunk, use the actual action they took
                     try:
-                        action = successor["extra_observations"]["actual_actions"]
+                        action = info["extra_observations"]["actual_actions"]
                     except KeyError:
                         pass
 
@@ -148,7 +153,7 @@ class PPOBaseAgent(nn.Module, BaseActor, BaseLearner, BaseExplorer):
                 history["t"] += 1
 
             returns = self.get_discounted_returns(rewards)
-            history = ut.track_metrics(history, env)
+            history = track_metrics(history, env)
             rollout.states.append(states)
             rollout.actions.append(actions)
             rollout.rewards.append(rewards)
