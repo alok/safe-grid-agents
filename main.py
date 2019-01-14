@@ -52,8 +52,13 @@ if __name__ == "__main__":
     ######## Instantiate and warmup ########
 
     def train(args, config, reporter):
+        # TODO This is here because there were issues with registering custom
+        # environments in each run. This should be looked at and removed.
+        import safe_grid_gym
+
         # Use Ray Tune's `config` arguments where appropriate by merging.
         vars(args).update(config)
+
 
         history = ut.make_meters({})
         eval_history = ut.make_meters({})
@@ -61,7 +66,7 @@ if __name__ == "__main__":
         history["writer"] = writer
         eval_history["writer"] = writer
 
-        env = GridworldEnv(env_name)
+        env = gym.make(env_name)
         agent = agent_class(env, args)
 
         agent, env, history, args = warmup_fn(agent, env, history, args)
