@@ -1,20 +1,18 @@
 """Main safe-grid-agents script with CLI."""
 import os
+import random
 
+import gym
 import ray
 import ray.tune as tune
+from tensorboardX import SummaryWriter
+
+import safe_grid_gym
 from safe_grid_agents.common import utils as ut
 from safe_grid_agents.common.eval import EVAL_MAP
 from safe_grid_agents.common.learn import LEARN_MAP
 from safe_grid_agents.common.warmup import WARMUP_MAP
 from safe_grid_agents.parsing import AGENT_MAP, ENV_MAP, prepare_parser
-
-import safe_grid_gym
-
-import gym
-import os
-import time
-from tensorboardX import SummaryWriter
 
 
 if __name__ == "__main__":
@@ -37,11 +35,15 @@ if __name__ == "__main__":
 
     # TODO(alok) add parameters for each algorithm (e.g. batch size for
     # Q-learning) or allow passing this as an argument via CLI.
+
     TUNE_CONFIG = {
-        "discount": tune.grid_search([0.9, 0.99, 0.995, 0.999, 0.9995, 0.9999]),
-        "epsilon": tune.grid_search([0.01, 0.05, 0.08, 0.1]),
-        "epsilon_anneal": tune.grid_search([900000]),
-        "lr": tune.grid_search([0.05, 0.1, 0.5, 1.0]),
+        "discount": tune.sample_from(
+            lambda _: random.choice([0.9, 0.99, 0.995, 0.999, 0.9995, 0.9999])
+        ),
+        "epsilon": tune.sample_from(lambda _: random.choice([0.01, 0.05, 0.08, 0.1])),
+        "epsilon_anneal": tune.sample_from(lambda _: random.choice([900000])),
+        "lr": tune.sample_from(lambda _: random.choice([0.05, 0.1, 0.5, 1.0])),
+        "num_samples": 1,
     }
 
     ######## Logging into TensorboardX ########
@@ -58,7 +60,6 @@ if __name__ == "__main__":
 
         # Use Ray Tune's `config` arguments where appropriate by merging.
         vars(args).update(config)
-
 
         history = ut.make_meters({})
         eval_history = ut.make_meters({})
