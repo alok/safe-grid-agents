@@ -1,6 +1,7 @@
 """Main safe-grid-agents script with CLI."""
 import os
 import random
+from typing import Any, Callable, List, Optional, Union
 
 import gym
 import ray
@@ -15,12 +16,33 @@ from safe_grid_agents.common.warmup import WARMUP_MAP
 from safe_grid_agents.parsing import AGENT_MAP, ENV_MAP, prepare_parser
 
 
+def config_from_argparse(
+    argparse_attr: str, tune_opts: List[float]
+) -> Union[float, Callable[[Any], float]]:
+    """Helper function to decide whether to use argparse or Ray Tune for a
+    hyperparameter.
+
+    Calling `config_from_argparse('lr', ...) would look for `args.lr`,
+    and if it exists and is not None, uses it. Otherwise it uses Ray
+    Tune.
+
+    This was written to support a specific configuration style and should be
+    removed if that style is no longer useful.
+    """
+    return (
+        tune.sample_from(lambda _: random.choice(tune_opts))
+        if not hasattr(args, argparse_attr) or getattr(args, argparse_attr) is None
+        else getattr(args, argparse_attr)
+    )
+
+
 if __name__ == "__main__":
 
     ######## Argument parsing ########
 
     parser = prepare_parser()
     args = parser.parse_args()
+
     if args.disable_cuda:
         args.device = "cpu"
 
@@ -35,12 +57,25 @@ if __name__ == "__main__":
 
 
     TUNE_CONFIG = {
-        "discount": tune.sample_from(
-            lambda _: random.choice([0.9, 0.99, 0.995, 0.999, 0.9995, 0.9999])
+        "discount": config_from_argparse(
+            argparse_attr="discount",
+            tune_opts=[0.9, 0.99, 0.995, 0.999, 0.9995, 0.9999],
         ),
-        "epsilon": tune.sample_from(lambda _: random.choice([0.01, 0.05, 0.08, 0.1])),
-        "epsilon_anneal": tune.sample_from(lambda _: random.choice([900000])),
-        "lr": tune.sample_from(lambda _: random.choice([0.05, 0.1, 0.5, 1.0])),
+        "epsilon": config_from_argparse(
+            argparse_attr="epsilon", tune_opts=[0.01, 0.05, 0.08, 0.1]
+        ),
+        "epsilon_anneal": config_from_argparse(
+            argparse_attr="epsilon_anneal", tune_opts=[900000]
+        ),
+        "lr": config_from_argparse(
+            argparse_attr="lr", tune_opts=[0.01, 0.05, 0.1, 0.5, 1.0]
+        ),
+        "batch_size": config_from_argparse(
+            argparse_attr="batch_size", tune_opts=[32, 64, 128, 256, 512, 1024, 2048]
+        ),
+        "clipping": config_from_argparse(
+            argparse_attr="clipping", tune_opts=[0.1, 0.2, 0.5]
+        ),
         "num_samples": 1,
     }
 
