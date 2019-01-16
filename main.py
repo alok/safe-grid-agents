@@ -33,8 +33,6 @@ if __name__ == "__main__":
     learn_fn = LEARN_MAP[args.agent_alias]
     eval_fn = EVAL_MAP[args.agent_alias]
 
-    # TODO(alok) add parameters for each algorithm (e.g. batch size for
-    # Q-learning) or allow passing this as an argument via CLI.
 
     TUNE_CONFIG = {
         "discount": tune.sample_from(
@@ -54,7 +52,7 @@ if __name__ == "__main__":
     ######## Instantiate and warmup ########
 
     def train(args, config, reporter):
-        # TODO This is here because there were issues with registering custom
+        # TODO(alok) This is here because there were issues with registering custom
         # environments in each run. This should be looked at and removed.
         import safe_grid_gym
 
