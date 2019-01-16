@@ -48,14 +48,6 @@ if __name__ == "__main__":
 
     ######## Set up agent and environment ########
 
-    # Get relevant env, agent, warmup function
-    env_name = ENV_MAP[args.env_alias]
-    agent_class = AGENT_MAP[args.agent_alias]
-    warmup_fn = WARMUP_MAP[args.agent_alias]
-    learn_fn = LEARN_MAP[args.agent_alias]
-    eval_fn = EVAL_MAP[args.agent_alias]
-
-
     TUNE_CONFIG = {
         "discount": config_from_argparse(
             argparse_attr="discount",
@@ -93,6 +85,13 @@ if __name__ == "__main__":
 
         # Use Ray Tune's `config` arguments where appropriate by merging.
         vars(args).update(config)
+
+        # Get relevant env, agent, warmup function
+        env_name = ENV_MAP[args.env_alias]
+        agent_class = AGENT_MAP[args.agent_alias]
+        warmup_fn = WARMUP_MAP[args.agent_alias]
+        learn_fn = LEARN_MAP[args.agent_alias]
+        eval_fn = EVAL_MAP[args.agent_alias]
 
         history = ut.make_meters({})
         eval_history = ut.make_meters({})
