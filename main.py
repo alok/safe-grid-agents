@@ -82,7 +82,8 @@ if __name__ == "__main__":
             env_state, history, eval_next = learn_fn(
                 agent, env, env_state, history, args
             )
-            # reporter(reward=
+            info = env_state[3]
+            reporter(hidden_reward=info['hidden_reward'],obs_reward=info['observed_reward'])
 
             if eval_next:
                 eval_history = eval_fn(agent, env, eval_history, args)
