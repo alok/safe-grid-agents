@@ -58,6 +58,13 @@ The generalized form for the CLI is
 python main.py <core_args> env <env_args> agent <agent_args>
 ```
 
+## Ray Tune
+
+We use Ray Tune to configure hyperparameters. Look at `TUNE_CONFIG` in
+`main.py` to see which are currently supported. If you specify an
+argument on the CLI, it will be used. Otherwise, Ray Tune will generate
+one for you.
+
 ## Monitoring agent learning with TensorboardX
 
 You can use the `--log-dir`/`-L` flag to the main.py script to specify a
