@@ -16,18 +16,31 @@ Emphasizing extensibility, modularity, and accessibility.
     reinforcement learning and their associated warmup functions.
 
 ## Installation
-When installing with pip, make sure to use the `process-dependency-links` flag:
-```bash
+
+When installing with pip, make sure to use the
+`process-dependency-links` flag:
+
+``` {.bash}
 pip install . --process-dependency-links
 ```
-URL-based dependencies are available for audit at the following repositories and forks:
-- [safe-grid-gym](https://github.com/jvmancuso/safe-grid-gym)
-- [ai-safety-gridworlds](https://github.com/jvmancuso/ai-safety-gridworlds)
 
-If you plan on developing this library, make sure to add an `-e` flag to the above pip install command.
+URL-based dependencies are available for audit at the following
+repositories and forks: -
+[safe-grid-gym](https://github.com/jvmancuso/safe-grid-gym) -
+[ai-safety-gridworlds](https://github.com/jvmancuso/ai-safety-gridworlds)
 
-This repo requires TensorboardX for monitoring and visualizing agent learning, as well as PyTorch for implementation of certain agents.  Currently, TensorboardX does not function properly without Tensorflow installed.  Since the installation process of these packages can vary system to system, we exclude them from our build process.  There are multiple tutorials online for installing both of these online.  For example, on OS X without CUDA support I'd go with:
-```bash
+If you plan on developing this library, make sure to add an `-e` flag to
+the above pip install command.
+
+This repo requires TensorboardX for monitoring and visualizing agent
+learning, as well as PyTorch for implementation of certain agents.
+Currently, TensorboardX does not function properly without Tensorflow
+installed. Since the installation process of these packages can vary
+system to system, we exclude them from our build process. There are
+multiple tutorials online for installing both of these online. For
+example, on OS X without CUDA support I'd go with:
+
+``` {.bash}
 pip install torch torchvision tensorflow
 ```
 
@@ -86,7 +99,12 @@ to visualize an agent's learning.
 # Development
 
 ## Code style
-We use [black](https://github.com/ambv/black) for auto-formatting according to a consistent style guide.  To auto format, run `black .` from inside the repo folder.  To make this more convenient, you can install plugins for your preferred text editor that auto-format on every save.
+
+We use [black](https://github.com/ambv/black) for auto-formatting
+according to a consistent style guide. To auto format, run `black .`
+from inside the repo folder. To make this more convenient, you can
+install plugins for your preferred text editor that auto-format on every
+save.
 
 ## Adding agents
 
@@ -121,6 +139,6 @@ Steps to take when adding a new agent.
 6.  Add a new entry for the agent's CLI arguments in
     `parsing/agent_parser_configs.yaml`. Follow the existing pattern and
     check for previously implemented YAML anchors that cover the
-    arguments you need (e.g. `learnrate`, `epsilon-anneal`, etc.). These
+    arguments you need (e.g. `learnrate`, `epsilon-anneal`, etc.). These
     configs should be organized by where they appear in the folder
     structure of the repository.
