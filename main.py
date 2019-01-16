@@ -103,8 +103,7 @@ if __name__ == "__main__":
         "train_curried_fn", lambda config, reporter: train(args, config, reporter)
     )
 
-    # TODO(alok) what is a natural stopping point?
-    # TODO(alok) what to put into reporter? maybe integrate it with tensorboardX?
+    # TODO(alok) Integrate Tune reporter with tensorboardX?
     experiment_spec = tune.Experiment(
         name="CRMDP", run="train_curried_fn", stop={}, config=TUNE_CONFIG
     )
