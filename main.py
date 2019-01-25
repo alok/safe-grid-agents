@@ -1,12 +1,14 @@
 """Main safe-grid-agents script with CLI."""
 import os
 import random
-from typing import Any, Callable, List, Optional, Union
+import subprocess
+from typing import Any, Callable, List, Optional, Sequence, Union
 
 import gym
+import numpy as np
 import ray
 import ray.tune as tune
-from tensorboardX import SummaryWriter
+import torch
 
 import safe_grid_gym
 from safe_grid_agents.common import utils as ut
@@ -14,6 +16,7 @@ from safe_grid_agents.common.eval import EVAL_MAP
 from safe_grid_agents.common.learn import LEARN_MAP
 from safe_grid_agents.common.warmup import WARMUP_MAP
 from safe_grid_agents.parsing import AGENT_MAP, ENV_MAP, prepare_parser
+from tensorboardX import SummaryWriter
 
 
 def config_from_argparse(
@@ -81,6 +84,11 @@ if __name__ == "__main__":
         "n_layers": config_from_argparse(argparse_attr="n_layers", tune_opts=[2]),
         "n_channels": config_from_argparse(argparse_attr="n_channels", tune_opts=[5]),
         "seed": config_from_argparse(argparse_attr="seed", tune_opts=range(500)),
+        "commit_id": (
+            subprocess.check_output(["git", "rev-parse", "--short", "HEAD"])
+            .decode("utf8")
+            .strip()
+        ),
         "num_samples": 1,
     }
 
@@ -112,7 +120,10 @@ if __name__ == "__main__":
 
         history = ut.make_meters({})
         eval_history = ut.make_meters({})
+
         writer = SummaryWriter(args.log_dir)
+        writer.add_scalars("data/args", args)
+
         history["writer"] = writer
         eval_history["writer"] = writer
 
