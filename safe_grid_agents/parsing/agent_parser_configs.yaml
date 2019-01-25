@@ -28,27 +28,23 @@ deep-q:
   replay-capacity:
     alias: r
     type: int
-    default: 10000
-    help: "Capacity of replay buffer (default: 10000)"
+    help: "Capacity of replay buffer"
   sync-every:
     alias: s
     type: int
-    default: 10000
-    help: "Number of timesteps to wait before syncing target network (default: 10000)"
+    help: "Number of timesteps to wait before syncing target network"
   n-layers: &layers
     alias: ls
     type: int
-    default: 2
-    help: "Number (non-input) layers for Q network (default: 2)"
+    help: "Number (non-input) layers for Q network"
   n-hidden: &hidden
     alias: hd
     type: int
-    default: 100
-    help: "Number of neurons per hidden layer (default: 100)"
+    help: "Number of neurons per hidden layer"
   batch-size: &batchsize
     alias: b
     type: int
-    help: "Batch size for model training (default: None)"
+    help: "Batch size for model training"
   device: &device
     alias: dv
     type: int
@@ -79,13 +75,11 @@ ppo-mlp:
   clipping: &clipping
     alias: c
     type: float
-    default: .2
-    help: "Epsilon constant for clipping in surrogate loss (default: .2)"
+    help: "Epsilon constant for clipping in surrogate loss"
   critic-coeff: &critic_coeff
     alias: cc
     type: float
-    default: 1.
-    help: "Scaling coefficient of critic loss; should be in (0,1] (default: 1)"
+    help: "Scaling coefficient of critic loss; should be in (0,1]"
   # gae-coeff:
   #   alias: g
   #   type: float
@@ -94,8 +88,7 @@ ppo-mlp:
   entropy-bonus: &entropy_bonus
     alias: eb
     type: float
-    default: .01
-    help: "Entropy bonus exploration coefficient (default: .01)"
+    help: "Entropy bonus exploration coefficient"
   n-layers: *layers
   n-hidden: *hidden
   device: *device
@@ -104,8 +97,7 @@ ppo-cnn:
   n-channels: &n_channels
     alias: ch
     type: int
-    default: 5
-    help: "Number of channels for the convolutional layers (default: 5)"
+    help: "Number of channels for the convolutional layers"
   lr: *learnrate
   rollouts: *rollouts
   epochs: *epochs
@@ -147,8 +139,8 @@ tabular-ssq:
   fuzzy-query:
     alias: f
     type: float
-    default: 1.
-    help: "Probability of querying H while online if budget and delta conditions are met (default: 1.)"
+    default: 1.0
+    help: "Probability of querying H while online if budget and delta conditions are met (default: 1.0)"
   delta:
     alias: dt
     type: float

@@ -17,7 +17,7 @@ from safe_grid_agents.parsing import AGENT_MAP, ENV_MAP, prepare_parser
 
 
 def config_from_argparse(
-    argparse_attr: str, tune_opts: List[float]
+    argparse_attr: str, tune_opts: Sequence[float]
 ) -> Union[float, Callable[[Any], float]]:
     """Helper function to decide whether to use argparse or Ray Tune for a
     hyperparameter.
@@ -68,6 +68,18 @@ if __name__ == "__main__":
         "clipping": config_from_argparse(
             argparse_attr="clipping", tune_opts=[0.1, 0.2, 0.5]
         ),
+        "entropy_bonus": config_from_argparse(
+            argparse_attr="entropy_bonus", tune_opts=[0.01, 0.05]
+        ),
+        "critic_coeff": config_from_argparse(
+            argparse_attr="critic_coeff", tune_opts=[1.0]
+        ),
+        "sync_every": config_from_argparse(
+            argparse_attr="sync_every", tune_opts=[10000]
+        ),
+        "n_hidden": config_from_argparse(argparse_attr="n_hidden", tune_opts=[100]),
+        "n_layers": config_from_argparse(argparse_attr="n_layers", tune_opts=[2]),
+        "n_channels": config_from_argparse(argparse_attr="n_channels", tune_opts=[5]),
         "num_samples": 1,
     }
 
