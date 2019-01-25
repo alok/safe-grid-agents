@@ -80,6 +80,7 @@ if __name__ == "__main__":
         "n_hidden": config_from_argparse(argparse_attr="n_hidden", tune_opts=[100]),
         "n_layers": config_from_argparse(argparse_attr="n_layers", tune_opts=[2]),
         "n_channels": config_from_argparse(argparse_attr="n_channels", tune_opts=[5]),
+        "seed": config_from_argparse(argparse_attr="seed", tune_opts=range(500)),
         "num_samples": 1,
     }
 
@@ -97,6 +98,10 @@ if __name__ == "__main__":
 
         # Use Ray Tune's `config` arguments where appropriate by merging.
         vars(args).update(config)
+
+        # fix seed for reproducibility
+        np.random.seed(args.seed)
+        torch.manual_seed(args.seed)
 
         # Get relevant env, agent, warmup function
         env_name = ENV_MAP[args.env_alias]
