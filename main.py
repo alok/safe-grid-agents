@@ -167,7 +167,11 @@ if __name__ == "__main__":
 
     # TODO(alok) Integrate Tune reporter with tensorboardX?
     experiment_spec = tune.Experiment(
-        name="CRMDP", run="train_curried_fn", stop={}, config=TUNE_CONFIG
+        name="CRMDP",
+        run="train_curried_fn",
+        stop={},
+        config=TUNE_CONFIG,
+        resources_per_trial={"cpu": 8, "gpu": 1},
     )
 
     tune.run_experiments(experiments=experiment_spec)
