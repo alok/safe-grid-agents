@@ -9,6 +9,7 @@ import numpy as np
 import ray
 import ray.tune as tune
 import torch
+from tensorboardX import SummaryWriter
 
 import safe_grid_gym
 from safe_grid_agents.common import utils as ut
@@ -16,7 +17,6 @@ from safe_grid_agents.common.eval import EVAL_MAP
 from safe_grid_agents.common.learn import LEARN_MAP
 from safe_grid_agents.common.warmup import WARMUP_MAP
 from safe_grid_agents.parsing import AGENT_MAP, ENV_MAP, prepare_parser
-from tensorboardX import SummaryWriter
 
 
 def config_from_argparse(
