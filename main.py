@@ -122,7 +122,11 @@ if __name__ == "__main__":
         eval_history = ut.make_meters({})
 
         writer = SummaryWriter(args.log_dir)
-        writer.add_scalars("data/args", args)
+        for k, v in args.__dict__.items():
+            if isinstance(v, (int, float)):
+                writer.add_scalar(f"data/{k}", v)
+            else:
+                writer.add_text(f"data/{k}", str(v))
 
         history["writer"] = writer
         eval_history["writer"] = writer
