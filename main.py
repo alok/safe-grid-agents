@@ -9,7 +9,6 @@ import numpy as np
 import ray
 import ray.tune as tune
 import torch
-from tensorboardX import SummaryWriter
 
 import safe_grid_gym
 from safe_grid_agents.common import utils as ut
@@ -17,6 +16,7 @@ from safe_grid_agents.common.eval import EVAL_MAP
 from safe_grid_agents.common.learn import LEARN_MAP
 from safe_grid_agents.common.warmup import WARMUP_MAP
 from safe_grid_agents.parsing import AGENT_MAP, ENV_MAP, prepare_parser
+from tensorboardX import SummaryWriter
 
 
 def config_from_argparse(
@@ -124,9 +124,9 @@ if __name__ == "__main__":
         writer = SummaryWriter(args.log_dir)
         for k, v in args.__dict__.items():
             if isinstance(v, (int, float)):
-                writer.add_scalar(f"data/{k}", v)
+                writer.add_scalar("data/{}".format(v))
             else:
-                writer.add_text(f"data/{k}", str(v))
+                writer.add_text("data/{}".format(v))
 
         history["writer"] = writer
         eval_history["writer"] = writer
