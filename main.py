@@ -124,9 +124,9 @@ if __name__ == "__main__":
         writer = SummaryWriter(args.log_dir)
         for k, v in args.__dict__.items():
             if isinstance(v, (int, float)):
-                writer.add_scalar("data/{}".format(v))
+                writer.add_scalar("data/{}".format(k), v)
             else:
-                writer.add_text("data/{}".format(v))
+                writer.add_text("data/{}".format(k), str(v))
 
         history["writer"] = writer
         eval_history["writer"] = writer
@@ -147,6 +147,7 @@ if __name__ == "__main__":
                 agent, env, env_state, history, args
             )
             info = env_state[3]
+            print(info)
             reporter(
                 hidden_reward=info["hidden_reward"], obs_reward=info["observed_reward"]
             )
