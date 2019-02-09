@@ -74,8 +74,11 @@ def handle_parser_args(parsers, name, configs) -> None:
         # unpickleable.
         for key in list(config.keys()):
             argattrs = {k: map_type(v) for k, v in config.pop(key).items()}
-            alias = argattrs.pop("alias")
-            p.add_argument("-{}".format(alias), "--{}".format(key), **argattrs)
+            if "alias" in argattrs:
+                alias = argattrs.pop("alias")
+                p.add_argument("-{}".format(alias), "--{}".format(key), **argattrs)
+            else:  # some arguments have no short form
+                p.add_argument("--{}".format(key), **argattrs)
     except AttributeError:
         return
 
