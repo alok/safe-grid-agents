@@ -1,13 +1,12 @@
 import random
+from typing import Any, Callable, Optional, Sequence, Union
+
 import ray
 import ray.tune as tune
-
 from main import args, train
-from typing import Any, Callable, Optional, Sequence, Union
 
 
 def config_from_argparse(
-
     argparse_attr: str, tune_opts: Sequence[float]
 ) -> Union[float, Callable[[Any], float]]:
     """Helper function to decide whether to use argparse or Ray Tune for a
@@ -26,10 +25,10 @@ def config_from_argparse(
         else getattr(args, argparse_attr)
     )
 
+
 TUNE_CONFIG = {
     "discount": config_from_argparse(
-        argparse_attr="discount",
-        tune_opts=[0.9, 0.99, 0.995, 0.999, 0.9995, 0.9999],
+        argparse_attr="discount", tune_opts=[0.9, 0.99, 0.995, 0.999, 0.9995, 0.9999]
     ),
     "epsilon": config_from_argparse(
         argparse_attr="epsilon", tune_opts=[0.01, 0.05, 0.08, 0.1]
@@ -49,12 +48,8 @@ TUNE_CONFIG = {
     "entropy_bonus": config_from_argparse(
         argparse_attr="entropy_bonus", tune_opts=[0.01, 0.05]
     ),
-    "critic_coeff": config_from_argparse(
-        argparse_attr="critic_coeff", tune_opts=[1.0]
-    ),
-    "sync_every": config_from_argparse(
-        argparse_attr="sync_every", tune_opts=[10000]
-    ),
+    "critic_coeff": config_from_argparse(argparse_attr="critic_coeff", tune_opts=[1.0]),
+    "sync_every": config_from_argparse(argparse_attr="sync_every", tune_opts=[10000]),
     "n_hidden": config_from_argparse(argparse_attr="n_hidden", tune_opts=[100]),
     "n_layers": config_from_argparse(argparse_attr="n_layers", tune_opts=[2]),
     "n_channels": config_from_argparse(argparse_attr="n_channels", tune_opts=[5]),
