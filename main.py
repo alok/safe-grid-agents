@@ -43,10 +43,8 @@ def train(args, config=None, reporter=noop):
     import safe_grid_gym
 
     # Use Ray Tune's `config` arguments where appropriate by merging.
-    print(args)
     if config is not None:
         vars(args).update(config)
-    print(args)
 
     # fix seed for reproducibility
     if args.seed is None:
@@ -75,6 +73,8 @@ def train(args, config=None, reporter=noop):
     eval_history["writer"] = writer
 
     env = gym.make(env_name)
+    env.seed(args.seed)
+
     agent = agent_class(env, args)
 
     agent, env, history, args = warmup_fn(agent, env, history, args)
