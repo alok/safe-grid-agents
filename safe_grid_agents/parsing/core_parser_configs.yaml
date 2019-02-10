@@ -41,5 +41,7 @@ core:
     action: store_true
     help: "Disable CUDA computations (default: False)"
   tune:
-    action: store_true
-    help: "Use Ray Tune (default: False)"
+    alias: t
+    action: append
+    type: str
+    help: "Use Ray Tune to tune this parameter"
