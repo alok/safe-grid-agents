@@ -26,7 +26,8 @@ core:
   discount:
     alias: D
     type: float
-    help: "Agent-death probability complement."
+    default: .99
+    help: "Agent-death probability complement. (default: 0.99)"
   cheat:
     alias: C
     action: store_true
