@@ -20,7 +20,7 @@ Emphasizing extensibility, modularity, and accessibility.
 When installing with pip, make sure to use the
 `process-dependency-links` flag:
 
-``` {.bash}
+``` {.sh}
 pip install . --process-dependency-links
 ```
 
@@ -32,15 +32,17 @@ repositories and forks: -
 If you plan on developing this library, make sure to add an `-e` flag to
 the above pip install command.
 
-This repo requires TensorboardX for monitoring and visualizing agent
-learning, as well as PyTorch for implementation of certain agents.
-Currently, TensorboardX does not function properly without Tensorflow
-installed. Since the installation process of these packages can vary
-system to system, we exclude them from our build process. There are
-multiple tutorials online for installing both of these online. For
-example, on OS X without CUDA support I'd go with:
+This repo requires [tensorboardX](https://github.com/lanpa/tensorboardX)
+for monitoring and visualizing agent learning, as well as PyTorch for
+implementation of certain agents. Currently, tensorboardX does not
+function properly without Tensorflow installed. Since the installation
+process of these packages can vary system to system, we exclude them
+from our build process. There are multiple tutorials online for
+installing both of these online. For example, on OS X without CUDA
+support I'd go with:
 
-``` {.bash}
+``` {.sh}
+# Replace `tensorflow` with `tensorflow-gpu` if you have a GPU.
 pip install torch torchvision tensorflow
 ```
 
@@ -67,24 +69,34 @@ here. Found in
 
 The generalized form for the CLI is
 
-``` {.bash}
+``` {.sh}
 python main.py <core_args> env <env_args> agent <agent_args>
 ```
 
 ## Ray Tune
 
-We use Ray Tune to configure hyperparameters. Look at `TUNE_CONFIG` in
-`main.py` to see which are currently supported. If you specify an
-argument on the CLI, it will be used. Otherwise, Ray Tune will generate
-one for you.
+We support using Ray Tune to configure hyperparameters. Look at
+`TUNE_DEFAULT_CONFIG` in `main.py` to see which are currently supported.
+If you specify a tunable parameter on the CLI with the `-t` or `--tune`
+flag, it will be automatically set.
 
-## Monitoring agent learning with TensorboardX
+### Example
+
+This will automatically set parameters for the learning rate `lr` and
+discount rate `discount`.
+
+``` {.sh}
+# `-t` and `--tune` are equivalent, and can be used interchangeably.
+python3 main.py -t lr --tune discount boat tabular-q
+```
+
+## Monitoring agent learning with tensorboardX
 
 You can use the `--log-dir`/`-L` flag to the main.py script to specify a
 directory for saving training and evaluation metrics across runs. I
 suggest a pattern similar to
 
-``` {.bash}
+``` {.sh}
 logs/sokoban/deep-q/lr5e-4
 # that is, <logdir>/<env_alias>/<agent_alias>/<uniqueid_or_hparams>
 ```
