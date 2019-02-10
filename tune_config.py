@@ -3,10 +3,15 @@ import random
 from copy import deepcopy
 from typing import Any, Dict
 
+import torch
 from ray import tune
 
 
-TUNE_REQUIRED_CONFIG = {"num_samples": 1}
+TUNE_KWARGS = {
+    # Run one experiment for each GPU in parallel.
+    "num_samples": torch.cuda.device_count(),
+    "resources_per_trial": {"cpu": 2, "gpu": 1},
+}
 
 # The duplication of tune.sample_from(...) is intentional. This makes it easier
 # to change sampling strategy in the future for certain parameters.
@@ -33,9 +38,12 @@ def tune_config(args: argparse.Namespace) -> Dict[str, Any]:
     Say the command line is `python3 main.py -t lr -t discount`. Then this will
     extract the `lr` and `discount` keys from `TUNE_DEFAULT_CONFIG`.
     """
-    config = deepcopy(TUNE_REQUIRED_CONFIG)
 
     if args.tune is not None:
-        for tunable_param in args.tune:
-            config[tunable_param] = TUNE_DEFAULT_CONFIG[tunable_param]
+        config = {
+            tunable_param: TUNE_DEFAULT_CONFIG[tunable_param]
+            for tunable_param in args.tune
+        }
+    else:
+        config = {}
     return config

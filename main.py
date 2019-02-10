@@ -6,7 +6,7 @@ from ray import tune
 
 from safe_grid_agents.parsing import prepare_parser
 from train import train
-from tune_config import tune_config
+from tune_config import TUNE_KWARGS, tune_config
 
 
 parser = prepare_parser()
@@ -41,11 +41,7 @@ if args.tune is not None:
 
     # TODO(alok) Integrate Tune reporter with tensorboardX?
     experiment_spec = tune.Experiment(
-        name="CRMDP",
-        run="train_curried_fn",
-        stop={},
-        config=config,
-        resources_per_trial={"cpu": 4, "gpu": 1},
+        name="CRMDP", run="train_curried_fn", stop={}, config=config, **TUNE_KWARGS
     )
 
     tune.run_experiments(experiments=experiment_spec)
