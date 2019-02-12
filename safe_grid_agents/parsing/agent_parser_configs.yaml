@@ -49,7 +49,8 @@ deep-q:
   batch-size: &batchsize
     alias: b
     type: int
-    help: "Batch size for model training"
+    default: 64
+    help: "Batch size for model training (default: 64)"
   device: &device
     alias: dv
     type: int
@@ -80,7 +81,8 @@ ppo-mlp:
   clipping: &clipping
     alias: c
     type: float
-    help: "Epsilon constant for clipping in surrogate loss"
+    default: 0.2
+    help: "Epsilon constant for clipping in surrogate loss (default: 0.2)"
   critic-coeff: &critic_coeff
     alias: cc
     type: float
@@ -94,7 +96,8 @@ ppo-mlp:
   entropy-bonus: &entropy_bonus
     alias: eb
     type: float
-    help: "Entropy bonus exploration coefficient"
+    default: 0.01
+    help: "Entropy bonus exploration coefficient (default: 0.01)"
   n-layers: *layers
   n-hidden: *hidden
   device: *device
